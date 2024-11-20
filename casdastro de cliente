@@ -1,0 +1,205 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/**
+ * Classe principal que gerencia o CRUD de clientes usando ArrayList.
+ */
+public class Main {
+    // Lista para armazenar os clientes cadastrados
+    private static ArrayList<Cliente> clientes = new ArrayList<>();
+    // Scanner para entrada de dados pelo console
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int opcao; // Variável para armazenar a escolha do usuário no menu
+
+        do {
+            // Exibe o menu de opções
+            System.out.println("\n--- Menu ---");
+            System.out.println("1. Cadastrar Cliente");
+            System.out.println("2. Listar Clientes");
+            System.out.println("3. Atualizar Cliente");
+            System.out.println("4. Remover Cliente");
+            System.out.println("5. Buscar Cliente");
+            System.out.println("0. Sair");
+            System.out.print("Escolha uma opção: ");
+            opcao = scanner.nextInt(); // Lê a opção escolhida pelo usuário
+            scanner.nextLine(); // Consumir a nova linha deixada pelo nextInt()
+
+            // Realiza a operação correspondente à opção escolhida
+            switch (opcao) {
+                case 1 -> cadastrarCliente();
+                case 2 -> listarClientes();
+                case 3 -> atualizarCliente();
+                case 4 -> removerCliente();
+                case 5 -> buscarCliente();
+                case 0 -> System.out.println("Saindo...");
+                default -> System.out.println("Opção inválida!"); // Opção fora do menu
+            }
+        } while (opcao != 0); // Continua exibindo o menu até o usuário escolher sair
+    }
+
+    /**
+     * Cadastra um novo cliente no sistema.
+     */
+    private static void cadastrarCliente() {
+        System.out.print("ID: ");
+        int id = scanner.nextInt(); // Lê o ID do cliente
+        scanner.nextLine(); // Consumir a nova linha
+
+        System.out.print("Nome: ");
+        String nome = scanner.nextLine(); // Lê o nome do cliente
+
+        System.out.print("Email: ");
+        String email = scanner.nextLine(); // Lê o email do cliente
+
+        System.out.print("Telefone: ");
+        String telefone = scanner.nextLine(); // Lê o telefone do cliente
+
+        // Adiciona o cliente à lista
+        clientes.add(new Cliente(id, nome, email, telefone));
+        System.out.println("Cliente cadastrado com sucesso!");
+    }
+
+    /**
+     * Lista todos os clientes cadastrados.
+     */
+    private static void listarClientes() {
+        if (clientes.isEmpty()) {
+            System.out.println("Nenhum cliente cadastrado."); // Lista vazia
+        } else {
+            // Itera sobre a lista de clientes e exibe cada um
+            clientes.forEach(cliente -> System.out.println(cliente));
+        }
+    }
+
+    /**
+     * Atualiza as informações de um cliente pelo ID.
+     */
+    private static void atualizarCliente() {
+        System.out.print("Informe o ID do cliente a ser atualizado: ");
+        int id = scanner.nextInt(); // Lê o ID do cliente
+        scanner.nextLine(); // Consumir a nova linha
+
+        // Busca o cliente pelo ID
+        Cliente cliente = encontrarClientePorId(id);
+        if (cliente != null) {
+            System.out.print("Novo nome: ");
+            cliente.setNome(scanner.nextLine()); // Atualiza o nome
+
+            System.out.print("Novo email: ");
+            cliente.setEmail(scanner.nextLine()); // Atualiza o email
+
+            System.out.print("Novo telefone: ");
+            cliente.setTelefone(scanner.nextLine()); // Atualiza o telefone
+
+            System.out.println("Cliente atualizado com sucesso!");
+        } else {
+            System.out.println("Cliente não encontrado."); // Cliente não existe
+        }
+    }
+
+    /**
+     * Remove um cliente pelo ID.
+     */
+    private static void removerCliente() {
+        System.out.print("Informe o ID do cliente a ser removido: ");
+        int id = scanner.nextInt(); // Lê o ID do cliente
+
+        // Busca o cliente pelo ID
+        Cliente cliente = encontrarClientePorId(id);
+        if (cliente != null) {
+            clientes.remove(cliente); // Remove o cliente da lista
+            System.out.println("Cliente removido com sucesso!");
+        } else {
+            System.out.println("Cliente não encontrado."); // Cliente não existe
+        }
+    }
+
+    /**
+     * Busca um cliente pelo ID e exibe suas informações.
+     */
+    private static void buscarCliente() {
+        System.out.print("Informe o ID do cliente: ");
+        int id = scanner.nextInt(); // Lê o ID do cliente
+
+        // Busca o cliente pelo ID
+        Cliente cliente = encontrarClientePorId(id);
+        if (cliente != null) {
+            System.out.println(cliente); // Exibe os detalhes do cliente
+        } else {
+            System.out.println("Cliente não encontrado."); // Cliente não existe
+        }
+    }
+
+    /**
+     * Encontra um cliente pelo ID na lista de clientes.
+     * 
+     * @param id ID do cliente a ser encontrado
+     * @return Cliente encontrado ou null se não existir
+     */
+    private static Cliente encontrarClientePorId(int id) {
+        // Percorre a lista de clientes e retorna aquele com o ID correspondente
+        return clientes.stream()
+                .filter(cliente -> cliente.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+}
+
+/**
+ * Classe que representa um cliente com atributos ID, nome, email e telefone.
+ */
+class Cliente {
+    private int id;
+    private String nome;
+    private String email;
+    private String telefone;
+
+    // Construtor para inicializar os atributos
+    public Cliente(int id, String nome, String email, String telefone) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+    }
+
+    // Getters e Setters para os atributos
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    // Método para exibir as informações do cliente de forma legível
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Nome: " + nome + ", Email: " + email + ", Telefone: " + telefone;
+    }
+}
